@@ -1,2 +1,185 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+// data part , parent, left child,right child;
+// functions :
+// insertion -> removing -> searching -> transversing
+// tree
+/*                        7
+              4                            11
+       3              5           8                 12
+                               */
+#include <iostream>
+using namespace std;
+struct node
+{
+    int data;
+    node *parent;
+    node *left;
+    node *right;
+};
+node *insertion(int data_node, node *p)
+{
+    node *temp = new node;
+    temp->data = data_node;
+    temp->parent = p;
+    temp->left = NULL;
+    temp->right = NULL;
+    return temp;
+}
+bool is_root_node(node *p)
+{
+    return (p->parent == NULL);
+}
+// tree =complete tree base address
+// p = passing parent_node for find depth
+int depth_function(node *tree, node *p)
+{
+    // we can find any nodes depth
+    if (is_root_node(p))
+        return 0;
+
+    return 1 + depth_function(tree, p->parent);
+}
+bool Binary_tree_or_not(node *root)
+{
+    static node *prev = NULL;
+    if (root != NULL)
+    {
+        if (!Binary_tree_or_not(root->left))
+            return false;
+        if (prev != NULL && root->data <= prev->data)
+            return false;
+        prev = root;
+        return Binary_tree_or_not(root->right);
+    }
+    else
+        return true;
+}
+
+// left root right in_order_transversal
+void in_order_transversal(node *root)
+{
+    if (root == NULL)
+        return;
+    in_order_transversal(root->left);
+    cout << root->data << "  ";
+    in_order_transversal(root->right);
+}
+// root   left right pre_order_transversal
+void pre_order_transversal(node *root)
+{
+    if (root == NULL)
+        return;
+    cout << root->data << "  ";
+    in_order_transversal(root->left);
+    in_order_transversal(root->right);
+}
+// left right root    post_order_transversal
+void post_order_transversal(node *root)
+{
+    if (root == NULL)
+        return;
+
+    post_order_transversal(root->left);
+    post_order_transversal(root->right);
+    cout << root->data << " ";
+}
+// leaf funtin
+bool isleaf(node *p)
+{
+    return (p->left == NULL && p->right == NULL);
+}
+// height of node
+int height(node *root)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        int left_side = height(root->left);
+        int right_side = height(root->right);
+        if (left_side > right_side)
+        {
+            return (left_side + 1);
+        }
+        else
+        {
+            return (right_side + 1);
+        }
+    }
+}
+// serching of a node
+node *search(node *root, int node_value)
+{
+    if (root == NULL || root->data == node_value)
+        return root;
+    if (root->data < node_value)
+        return search(root->right, node_value);
+
+    return search(root->left, node_value);
+}
+// delete node
+
+node *min_value_node(node *root)
+{
+    node *current = root;
+    while (current->left != NULL)
+        current = current->left;
+    return current;
+}
+node *delete_node(node *root, int element)
+{
+
+    if (root == NULL)
+        return root;
+    if (element < root->data)
+        root->left = delete_node(root->left, element);
+    else if (element > root->data)
+        root->right = delete_node(root->right, element);
+    else
+    {
+        if (root->left == NULL && root->right == NULL)
+            return NULL;
+        else if (root->left == NULL)
+        {
+            node *temp = root->right;
+            delete root;
+            return temp;
+        }
+        else if (root->right == NULL)
+        {
+            node *temp = root->left;
+            delete root;
+            return temp;
+        }
+
+        node *temp = min_value_node(root->right);
+        root->data = temp->data;
+        root->right = delete_node(root->right, temp->data);
+    }
+    return root;
+}
+
+int main()
+{
+    node *root = insertion(9, NULL);
+    node *tree = root;
+    node *n1, *n2, *n3, *n4, *n5, *n6, *n7;
+    n1 = root->left = insertion(2, root);
+    n2 = root->right = insertion(6, root);
+    n3 = n2->right = insertion(7, root);
+    n4 = n2->left = insertion(5, root);
+    n5 = n1->right = insertion(3, root);
+    n6 = n1->left = insertion(1, root);
+
+    in_order_transversal(root);
+    cout << endl;
+
+    cout << "Binary tree or not 1-yes ,0 not   :  " << Binary_tree_or_not(tree) << endl;
+   
+
+    delete_node(root, 4);
+    in_order_transversal(root);
+
+    delete root, n1, n2, n3, n4, n5, n6;
+}
