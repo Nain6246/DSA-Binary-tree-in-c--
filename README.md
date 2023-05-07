@@ -1,8 +1,8 @@
-# DSA-Binary-tree-in-c--
-Binary tree in c++ using functions
-Functions :
-     insert new node  
-     find it is root node or not  ,
+# DSA-Binary-tree-in-c--  <br>
+Binary tree in c++ using functions  <br>
+Functions :  <br>
+     insert new node   <br>
+     find it is root node or not  , <br>
      depth of the node  ,
      it is binary tree or not  ,
      in order tranversal (left,root,right) for display all data   ,
